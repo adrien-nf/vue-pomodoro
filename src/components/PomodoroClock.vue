@@ -1,36 +1,44 @@
 <template>
-<div class="md-layout">
-    <div class="md-layout-item">A</div>
-    <div class="md-layout-item md-size-15">B</div>
-    <div class="md-layout-item">C</div>
-  </div>
+	<section :class="`hero slow-transition ` + (type === POMODORO ? 'is-tomato' : 'is-pepperbell') + ` has-text-light pomodoro-container`">
+		<div class="hero-body">
+			<Timer :pomodorosCompleted="pomodorosCompleted" :type="type" @skip="$emit('skip')"/>
+			<Tasks :tasks="tasks" @create="createTask" @toggleTask="toggleTask"/>
+		</div>
+	</section>
 </template>
 
 <script>
+import Timer from "./Timer.vue";
+import Tasks from "./Tasks.vue";
+import { POMODORO } from "../consts/types";
+
 export default {
-  name: "PomodoroClock"
+	name: "PomodoroClock",
+	components: {
+		Timer,
+		Tasks,
+	},
+	props: {
+		type: {},
+		tasks: {},
+		pomodorosCompleted: {}
+	},
+	data: () => ({
+		POMODORO
+	}),
+	methods: {
+		createTask(taskName) {
+			this.$emit("create", taskName);
+		},
+		toggleTask(index) {
+			this.$emit("toggleTask", index)
+		}
+	}
 }
 </script>
 
-<style>
-  .background {
-    background:
-    linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
-    linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
-    linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
-    linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
-    linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
-    linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
-    background-color: #131313;
-    background-size: 20px 20px;
-    width: calc(100% - 2em);
-    height: calc(100vh - 2em);
-    padding: 1em;
-  }
-
-  .content {
-    width: 100%;
-    height: 100%;
-    background-color:white;
-  }
+<style scoped>
+.pomodoro-container {
+	border-radius: 16px;
+}
 </style>
