@@ -1,7 +1,7 @@
 <template>
 	<section :class="`hero slow-transition ` + (type === POMODORO ? 'is-tomato' : 'is-pepperbell') + ` has-text-light pomodoro-container`">
 		<div class="hero-body">
-			<Timer :pomodorosCompleted="pomodorosCompleted" :type="type" @skip="$emit('skip')"/>
+			<Timer :currentTimer="currentTimer" :elapsedTime="elapsedTime" :pomodorosCompleted="pomodorosCompleted" :type="type" @skip="$emit('skip')" @setStep="(step) => $emit('setStep', step)" />
 			<Tasks :tasks="tasks" @create="createTask" @toggleTask="toggleTask"/>
 		</div>
 	</section>
@@ -21,7 +21,9 @@ export default {
 	props: {
 		type: {},
 		tasks: {},
-		pomodorosCompleted: {}
+		pomodorosCompleted: {},
+		currentTimer: {},
+		elapsedTime: {},
 	},
 	data: () => ({
 		POMODORO

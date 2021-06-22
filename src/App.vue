@@ -6,7 +6,7 @@
     <section class="container">
       <div class="columns">
         <div class="column is-half is-offset-one-quarter pt-5">
-          <PomodoroClock :pomodorosCompleted="pomodorosCompleted" :type="type" :tasks="tasks" @create="createTask" @toggleTask="toggleTask" @skip="skip"/>
+          <PomodoroClock :currentTimer="currentTimer" :elapsedTime="elapsedTime" :pomodorosCompleted="pomodorosCompleted" :type="type" :tasks="tasks" @create="createTask" @toggleTask="toggleTask" @skip="skip" @setStep="setStep"/>
         </div>
       </div>
     </section>
@@ -29,7 +29,14 @@ export default {
     type: POMODORO,
     tasks: [],
     pomodorosCompleted: 0,
-    timerStartDate: null
+    elapsedTime: 0,
+    timer: null,
+    settings: {
+      pomodoroTimer: 25 * 60,
+      tinyPauseTimer: 5 * 60,
+      bigPauseTimer: 15 * 60,
+    },
+    currentTimer: 25 * 60,
   }),
   methods: {
     createTask(name) {
@@ -47,30 +54,63 @@ export default {
       this.nextStep();
     },
     nextStep() {
+      this.elapsedTime = 0;
       switch(this.type) {
         case POMODORO:
           this.pomodorosCompleted = (this.pomodorosCompleted + 1) > 4 ? 0 : this.pomodorosCompleted + 1
           this.type = this.pomodorosCompleted === 4 ? BIG_PAUSE : TINY_PAUSE;
+          this.stopTimer();
+          this.currentTimer = this.type === BIG_PAUSE ? this.settings.bigPauseTimer : this.settings.tinyPauseTimer;
+          this.startTimer();
           break;
         case BIG_PAUSE:
           this.type = POMODORO;
           this.pomodorosCompleted = 0
+          this.stopTimer();
+          this.currentTimer = this.settings.pomodoroTimer;
+          this.startTimer();
           break;
         case TINY_PAUSE:
           this.type = POMODORO;
+          this.stopTimer();
+          this.currentTimer = this.settings.pomodoroTimer;
+          this.startTimer();
           break;
       }
+    },
+    setStep(step) {
+      this.pomodorosCompleted = 0;
+      this.type = step;
+      this.elapsedTime = 0;
+      if(step === POMODORO) {
+        this.currentTimer = this.settings.pomodoroTimer
+      } else if (step === BIG_PAUSE) {
+        this.currentTimer = this.settings.bigPauseTimer
+      } else if (step === TINY_PAUSE) {
+        this.currentTimer = this.settings.tinyPauseTimer
+      }
+    },
+    startTimer() {
+      this.timer = setInterval(() => {
+        this.elapsedTime++;
+        if(this.elapsedTime === this.currentTimer) {
+          this.nextStep();
+        }
+      }, 1000)
+    },
+    stopTimer() {
+      if(this.timer)
+        clearInterval(this.timer);
     }
+  },
+  mounted() {
+    this.currentTimer = this.settings.pomodoroTimer
+    this.startTimer();
   }
 }
 </script>
 
 <style scoped>
-  .background {
-    width: 100%;
-    height: 100vh;
-  }
-
   .background-red {
     background-color: #ff7661;
   }

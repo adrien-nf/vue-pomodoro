@@ -5,9 +5,9 @@
                 <a class="navbar-item" href="https://adrien-nf.github.io/homepage/">
                     Back to Homepage
                 </a>
-                <a class="navbar-item">
+                <!-- <a class="navbar-item">
                     Settings
-                </a>
+                </a> -->
             </div>
         </div>
     </nav>
