@@ -27,7 +27,14 @@
 					</div>
 				</div>
 			</div>
-			<button class="button is-fullwidth" @click="$emit('skip')">Skip</button>
+			<div class="columns">
+				<div class="column">
+					<button class="button is-fullwidth" @click="$emit('toggleTimer')">{{!!timer ? "Pause" : "Resume"}}</button>
+				</div>
+				<div class="column">
+					<button class="button is-fullwidth" @click="$emit('skip')">Skip</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -40,6 +47,7 @@ export default {
 		pomodorosCompleted: {},
 		currentTimer: {},
 		elapsedTime: {},
+		timer: {},
 	},
 	data: () => ({
 		POMODORO,

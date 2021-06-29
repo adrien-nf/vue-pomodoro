@@ -1,7 +1,15 @@
 <template>
 	<section :class="`hero slow-transition ` + (type === POMODORO ? 'is-tomato' : 'is-pepperbell') + ` has-text-light pomodoro-container`">
 		<div class="hero-body">
-			<Timer :currentTimer="currentTimer" :elapsedTime="elapsedTime" :pomodorosCompleted="pomodorosCompleted" :type="type" @skip="$emit('skip')" @setStep="(step) => $emit('setStep', step)" />
+			<Timer
+			:currentTimer="currentTimer"
+			:elapsedTime="elapsedTime"
+			:pomodorosCompleted="pomodorosCompleted"
+			:type="type" @skip="$emit('skip')"
+			@setStep="(step) => $emit('setStep', step)"
+			@toggleTimer="$emit('toggleTimer')"
+			:timer="timer"
+			/>
 			<Tasks :tasks="tasks" @create="createTask" @toggleTask="toggleTask"/>
 		</div>
 	</section>
@@ -24,6 +32,7 @@ export default {
 		pomodorosCompleted: {},
 		currentTimer: {},
 		elapsedTime: {},
+		timer: {},
 	},
 	data: () => ({
 		POMODORO

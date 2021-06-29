@@ -6,7 +6,19 @@
     <section class="container">
       <div class="columns">
         <div class="column is-half is-offset-one-quarter pt-5">
-          <PomodoroClock :currentTimer="currentTimer" :elapsedTime="elapsedTime" :pomodorosCompleted="pomodorosCompleted" :type="type" :tasks="tasks" @create="createTask" @toggleTask="toggleTask" @skip="skip" @setStep="setStep"/>
+          <PomodoroClock
+          :currentTimer="currentTimer"
+          :elapsedTime="elapsedTime"
+          :pomodorosCompleted="pomodorosCompleted"
+          :type="type"
+          :tasks="tasks"
+          @create="createTask"
+          @toggleTask="toggleTask"
+          @skip="skip"
+          @setStep="setStep"
+          @toggleTimer="toggleTimer"
+          :timer="timer"
+          />
         </div>
       </div>
     </section>
@@ -99,8 +111,17 @@ export default {
       }, 1000)
     },
     stopTimer() {
-      if(this.timer)
+      if(this.timer) {
         clearInterval(this.timer);
+        this.timer = null;
+      }
+    },
+    toggleTimer() {
+      if(this.timer) {
+        this.stopTimer();
+      } else {
+        this.startTimer();
+      }
     }
   },
   mounted() {
